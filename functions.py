@@ -2,6 +2,9 @@ import re
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
 import csv
+import pandas as pd
+from nltk import PorterStemmer
+from ast import literal_eval
 
 def read_Dom(input_dom, percentage):
     urls = []
@@ -96,4 +99,22 @@ def extract_Data(urls):
         except:
             continue
     output.close()
+    
+def readData():
+    dataframe = pd.read_csv('bonappetit_data.csv')
+    print(dataframe.to_string())
+    # createTDImatrix(dataframe['ingredients'])
+    
+def createTDImatrix(column):
+    count = 0
+    for row in column:
+            for tupl in list(literal_eval(row)):
+                print(tupl)
+            
+            print(count)
+            count +=1
+    print("create Term Document Index")
+    
+def queryMachine():
+     print("Query Machine")
  
