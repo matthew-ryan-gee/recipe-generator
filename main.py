@@ -1,102 +1,19 @@
-import re
-from bs4 import BeautifulSoup as bs
-from urllib.request import urlopen
-import csv
-# import tensorflow 
+from functions import read_Dom, readData, queryMachine
 
+#main
+print("Hello. This program scrapes the BonAppetit website for recipes and",
+      "allows the user to query and apply statistics to the data.")
 
+hasData = input("Do you already have the data in a csv format? Y/N: ")
 
-
-# remove lines not containing '/bonappetit.com/recipe/'
-# remove lines containing /recipe/recipe
-
-
-### Reads file and cleans data ###
-file = open("site.txt", encoding='utf-8')
-lines = file.readlines()
-
-urls = []
-count = 0
-limit = 10
-for line in lines:
-
-    if line.startswith("<url>"):
-        if "bonappetit.com/recipe/" in line:
-            if "recipe/recipe" not in line:
-                start = line.index("<loc>") + len("<loc>")
-                end = line.index("</loc>")
-                newLine = line[start:end]
-                titleStart = len("https://www.bonappetit.com/recipe/")
-                if re.match("[a-zA-Z0-9-]*$", newLine[titleStart:]):
-                    # urls.append(newLine[titleStart:])
-                    urls.append(newLine)
-                    
-urls.sort()
-
-output = open('bonappetit_data.csv', 'w+', encoding='utf-8-sig', newline='')
-writer = csv.writer(output, delimiter=',', quotechar='"',quoting=csv.QUOTE_MINIMAL)
-writer.writerow(['title','url', 'author', 'servings', 'ingredients','steps'])
-
-for url in urls:
-    try:
-        recipe_page = url
-        page = urlopen(recipe_page)
-        soup = bs(page, 'html.parser')    
-        name_box = soup.find('h1')
-        if (name_box != None):
-            title = name_box.text.strip()   
-        # print(title)
-        # print(url)
-        
-        author_box = soup.find('span', {'itemprop': 'name'})
-        if (author_box != None):
-            author = author_box.text.strip()
-        
-        # print(author)
-        
-        
-        ingredients = []
-        ingredient_box = soup.find('div',  {'data-testid': 'IngredientList'})
-        if(ingredient_box != None):
-            if (ingredient_box.p != None):
-                servings = ingredient_box.p.text
-            amount = []
-            item = []
-            
-            last_tag = 'div'
-            
-            ingredient_box = ingredient_box.find('div')
-            if ingredient_box != None:
-                ingredient_box = ingredient_box.find_all()
-                if ingredient_box != None:
-                    for tag in ingredient_box:
-                        if tag.name == last_tag:
-                            amount.append("Sub Recipe:")
-                        if tag.name == 'div':
-                            item.append(tag.text)
-                            last_tag = 'div'
-                        if tag.name == 'p':
-                            amount.append(tag.text)
-                            last_tag = 'p'
-            
-            ingredients = zip (amount, item)
-            # print("SERVINGS: ", servings)
-            ingredients = [l for l in ingredients]
-        
+if hasData.lower() == "n":
+    print("Scraping the whole website takes forever TBH - there are 15000 recipes.")
+    percent = input("Please enter a number between 0 and 100 to determine what percentage of the data you wish to scrape. ")
+    dom = "site.txt"
+    read_Dom(dom, percent)
     
-        
-        steps = []
-        preparation_box = soup.find('div',  {'data-testid': 'InstructionsWrapper'})
-        if(preparation_box != None):
-            preparation_box = preparation_box.find_all('p')
-            if preparation_box != None:
-                for p in preparation_box:
-                    steps.append(p.text)
-        # print(steps)
-    
-        
-        writer.writerow([title, url, author, servings, list(ingredients), steps])
-    except:
-        continue
-output.close()
- 
+readData()
+
+queryMachine()
+
+
