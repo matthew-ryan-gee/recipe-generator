@@ -1,2 +1,2 @@
 # recipe-generator
-python program that scrapes bonappetit for websites and then generates new recipes using ML
+collection of python programs that scrapes bonappetit for recipes, does some data processing, and might, maybe, potentially have some ML involved? 
