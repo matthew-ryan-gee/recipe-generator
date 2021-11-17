@@ -54,57 +54,57 @@ def block_reader(path):
 
 def block_document_segmenter(INPUT_STRUCTURE):
 
-    # doc_list = []
-    # document = ""
+    doc_list = []
+    document = ""
     
-    # #These two loops concatenate all sgm content into a single item
-    # for file in INPUT_STRUCTURE:
-    #     doc_list.append(file) #so i can ignore this structure garbage 
-    # for item in doc_list:
-    #     document+=item
+    #These two loops concatenate all sgm content into a single item
+    for file in INPUT_STRUCTURE:
+        doc_list.append(file) #so i can ignore this structure garbage 
+    for item in doc_list:
+        document+=item
     
-    # #This removes the 22 instances of <!Doctype... from the text collection
-    # document = document.replace("<!DOCTYPE lewis SYSTEM \"lewis.dtd\">", "")
+    #This removes the 22 instances of <!Doctype... from the text collection
+    document = document.replace("<!DOCTYPE lewis SYSTEM \"lewis.dtd\">", "")
 
-    # #The String containing the sgm files is then split by </REUTERS> so that each
-    # #entry of the list corresponds with one news article
-    # document = document.split("</REUTERS>")
-    # document = document[0:-1] #This removes some junk from the end of the file
-    # for item in document:
-    #     item+="</REUTERS>" #This appends </REUTERS> back onto each article for the asserts
-    #     yield(item)
+    #The String containing the sgm files is then split by </REUTERS> so that each
+    #entry of the list corresponds with one news article
+    document = document.split("</REUTERS>")
+    document = document[0:-1] #This removes some junk from the end of the file
+    for item in document:
+        item+="</REUTERS>" #This appends </REUTERS> back onto each article for the asserts
+        yield(item)
     
-    # for line in INPUT_STRUCTURE:
-    #     yield(line)
+    for line in INPUT_STRUCTURE:
+        yield(line)
     yield(INPUT_STRUCTURE)
     
 
 def block_extractor(INPUT_STRUCTURE):
-    # import pandas as pd
-    # # dataframe = pd.read_csv(INPUT_STRUCTURE)
-    # content_dict = []
-    # ID = 1
+    import pandas as pd
+    # dataframe = pd.read_csv(INPUT_STRUCTURE)
+    content_dict = []
+    ID = 1
     
-    # #This loop finds the index of <BODY> and </BODY> for each article and
-    # #then takes splices the content from between those indices and stores it in
-    # #a dictionary
-    # for f in INPUT_STRUCTURE:
-    #     start = f.find("<BODY>")+6
-    #     end = f.find("</BODY>")
-    #     TEXT = f[start:end]
-    #     entry = {
-    #         "ID": ID,
-    #         "TEXT": TEXT
-    #         }
-    #     content_dict.append(entry)
-    #     ID +=1
+    #This loop finds the index of <BODY> and </BODY> for each article and
+    #then takes splices the content from between those indices and stores it in
+    #a dictionary
+    for f in INPUT_STRUCTURE:
+        start = f.find("<BODY>")+6
+        end = f.find("</BODY>")
+        TEXT = f[start:end]
+        entry = {
+            "ID": ID,
+            "TEXT": TEXT
+            }
+        content_dict.append(entry)
+        ID +=1
     
 
 
-    # for item in content_dict:
-    #     yield(item)
+    for item in content_dict:
+        yield(item)
     
-    # yield(INPUT_STRUCTURE)
+    yield(INPUT_STRUCTURE)
         
     for item in INPUT_STRUCTURE:
          yield(item)     
@@ -112,25 +112,25 @@ def block_extractor(INPUT_STRUCTURE):
 
 
 def block_tokenizer(INPUT_STRUCTURE):
-    # from nltk.tokenize import word_tokenize
+    from nltk.tokenize import word_tokenize
     
-    # #This loop iterates through each mass of text of the dictionary and then
-    # #creates ID/word tuples for every word found in the text
-    # for item in INPUT_STRUCTURE:
-    #     id = item['ID']
-    #     text = item['TEXT']
-    #     text = word_tokenize(text)
-    #     for word in text:
-    #         word_tuple = (id, word)
-    #         yield word_tuple
+    #This loop iterates through each mass of text of the dictionary and then
+    #creates ID/word tuples for every word found in the text
+    for item in INPUT_STRUCTURE:
+        id = item['ID']
+        text = item['TEXT']
+        text = word_tokenize(text)
+        for word in text:
+            word_tuple = (id, word)
+            yield word_tuple
     
-    # for line in INPUT_STRUCTURE:
-    #     id = item['ID']
-    #     text = item['TEXT']
-    #     text = word_tokenize(text)
-    #     for word in text:
-    #         word_tuple = (id, word)
-    #         yield word_tuple
+    for line in INPUT_STRUCTURE:
+        id = item['ID']
+        text = item['TEXT']
+        text = word_tokenize(text)
+        for word in text:
+            word_tuple = (id, word)
+            yield word_tuple
 
 
 
