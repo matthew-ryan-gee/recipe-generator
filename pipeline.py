@@ -64,11 +64,11 @@ def BSBI_index(frame, column, TDI):
             inverted_index[term][docID] = 1
 
     
-    # import pprint 
-    # output_s = pprint.pformat(dict(inverted_index))
+    import pprint 
+    output_s = pprint.pformat(dict(inverted_index))
     
-    # with open('BSBI_index.txt','w') as f:
-    #     f.write(output_s)
+    with open('BSBI_index.txt','w') as f:
+        f.write(output_s)
     
     
     print("BSBI: ", len(inverted_index.keys()))
@@ -96,14 +96,15 @@ def SPIMI_index(frame,column,TDI):
                 else:
                     block[key][value] = 1
                 return True
-        else:
-            return False
+        return False
     
     for pair in TDI:
         term = pair[0] #key
         docID = pair[1] #value
         
-        if term in new_block:
+
+        
+        if term in new_block:  
             if docID in new_block[term]:
                 new_block[term][docID] = new_block[term][docID] + 1
             else:
@@ -119,8 +120,13 @@ def SPIMI_index(frame,column,TDI):
                     block_list.append(new_block)
                     block_index = block_index + 1
                     new_block = dict()
+                    new_block[term] = dict()
+                    new_block[term][docID] = 1
                     # print("new block", block_index, "!")
-    
+                    
+                    
+                    
+    block_list.append(new_block)
     inverted_index = dict()
     
     print("BLOCK LIST: ", len(block_list))
@@ -128,10 +134,10 @@ def SPIMI_index(frame,column,TDI):
         merge(inverted_index, block)
         
 
-    # import pprint 
-    # output_s = pprint.pformat(dict(inverted_index))
-    # with open('SPIMI_index.txt','w') as f:
-    #     f.write(output_s)
+    import pprint 
+    output_s = pprint.pformat(dict(inverted_index))
+    with open('SPIMI_index.txt','w') as f:
+        f.write(output_s)
         
     
     print("SPIMI: ", len(inverted_index.keys()))
